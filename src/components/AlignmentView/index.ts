@@ -1,0 +1,1 @@
+export { AlignmentView } from './AlignmentView'

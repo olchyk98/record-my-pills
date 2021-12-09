@@ -1,26 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { AlignmentView } from './components/AlignmentView'
+import { PillsHistory } from './components/PillsHistory'
+import { PillsPicker } from './components/PillsPicker'
 
-function App() {
+export function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <AlignmentView full="both">
+      <PillsPicker />
+      <PillsHistory />
+    </AlignmentView>
+  )
 }
-
-export default App;
