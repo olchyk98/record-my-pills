@@ -1,5 +1,6 @@
-import { assoc, prepend }  from 'ramda'
-import create from 'zustand'
+import { assoc, prepend, prop }  from 'ramda'
+import { subscribeWithSelector, StoreApiWithSubscribeWithSelector } from 'zustand/middleware'
+import create, { GetState, SetState } from 'zustand'
 import { TakenPill } from '../types'
 
 interface TakenPillsState {
@@ -12,20 +13,26 @@ const initialTakenPills: TakenPill[] = (takenPillsJSON)
   ? JSON.parse(takenPillsJSON)
   : []
 
-// NOTE: I allow of the reducers to not be pure,
-// as I don't want to spend time on designing this.
-export const useTakenPills = create<TakenPillsState>((set) => ({
-  takenPills: initialTakenPills,
-  recordPill: (record) => {
-    set((state) => {
-      const nextTakenPills = prepend(record, state.takenPills)
-      window.localStorage.setItem(
-        'takenPills',
-        JSON.stringify(nextTakenPills),
-      )
-      console.log(nextTakenPills)
+export const useTakenPills = create<
+  TakenPillsState,
+  SetState<TakenPillsState>,
+  GetState<TakenPillsState>,
+  StoreApiWithSubscribeWithSelector<TakenPillsState>
+>(subscribeWithSelector(
+  (set) => ({
+    takenPills: initialTakenPills,
+    recordPill: (record) => {
+      set((state) => {
+        const nextTakenPills = prepend(record, state.takenPills)
+        return assoc('takenPills', nextTakenPills, state)
+      })
+    },
+  }),
+))
 
-      return assoc('takenPills', nextTakenPills, state)
-    })
-  },
-}))
+useTakenPills.subscribe(prop('takenPills'), (takenPills) => {
+  window.localStorage.setItem(
+    'takenPills',
+    JSON.stringify(takenPills),
+  )
+})

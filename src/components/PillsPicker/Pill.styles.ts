@@ -10,11 +10,6 @@ export const useStyles = makeStyles<Dictionary<string>, PillProps>({
     position: 'relative',
     transition: '100ms',
     boxShadow: '5px 5px 10px -5px rgba(0, 0, 0, .2)',
-    border: ({ active }) => `3px solid ${ (active) ? 'black' : 'transparent' }`,
-
-    '&:hover': {
-      borderColor: ({ active }) => (active) ? 'gold' : 'black',
-    },
   },
   icon: {
     height: '100px',
