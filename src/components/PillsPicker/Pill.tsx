@@ -1,4 +1,5 @@
-import { useRef } from 'react'
+import { isNil } from 'ramda'
+import { useEffect, useRef } from 'react'
 import { AlignmentView } from '../AlignmentView'
 import { useStyles } from './Pill.styles'
 import { PillProps } from './types'
@@ -9,14 +10,20 @@ const parseInputValue = (input: HTMLInputElement | null): number => (
 
 export const Pill = (props: PillProps) => {
   const {
-    name,
     iconURL,
+    name,
     onChange,
-    amountLeft,
-    totalAmount,
+    selectedAmount,
   } = props
   const inputRef = useRef<HTMLInputElement>(null)
   const styles = useStyles(props)
+
+  useEffect(() => {
+    if(isNil(selectedAmount)) {
+      const input = inputRef.current
+      if(input) input.value = ''
+    }
+  }, [ selectedAmount ])
 
   return (
     <AlignmentView
@@ -35,7 +42,7 @@ export const Pill = (props: PillProps) => {
           onChange(parseInputValue(target))
         } }
         type="number"
-        placeholder={ `${amountLeft}/${totalAmount} pills left` }
+        placeholder="Number of Pills"
         className={ styles.amountInput }
       />
     </AlignmentView>

@@ -1,11 +1,11 @@
-import { find, map, forEach, clamp, any,  none, reject, append } from 'ramda'
-import { useMemo, useState } from 'react'
+import { find, map, forEach, clamp, any,  append, findIndex, update, addIndex } from 'ramda'
+import { useCallback, useState } from 'react'
 import { AlignmentView } from '../AlignmentView'
 import { Pill } from './Pill'
 import { useStyles } from './PillsPicker.styles'
 import { Pills, PillName } from '../../data/Pills'
 import { createNamePred } from './createNamePred'
-import { useTakenPills } from '../../stores/takenPills'
+import { useTakenPillsStore } from '../../stores/takenPills'
 import { TakenPill } from '../../types'
 
 interface PillState {
@@ -22,17 +22,21 @@ const isActiveState = ({ amount }: PillState): boolean => (
 export const PillsPicker = () => {
   const styles = useStyles()
 
-  const takenPills = useTakenPills()
+  const takenPillsStore = useTakenPillsStore()
   const [ pills, setPills ] = useState<PillState[]>([])
 
   const setPillState = (name: PillName, state: LocalPillState): PillState[] => {
     const namePred = createNamePred(name)
+    const itemIndex = findIndex(namePred, pills)
+    const nextPillState = { name, ...state }
 
-    const nextPills = (
-      none(namePred, pills)
-        ? append({ name, ...state }, pills)
-        : reject(namePred, pills)
+    const stateUpdator = (
+      itemIndex === -1
+        ? append(nextPillState)
+        : update(itemIndex, nextPillState)
     )
+
+    const nextPills = stateUpdator(pills)
 
     setPills(nextPills)
     return nextPills
@@ -42,10 +46,16 @@ export const PillsPicker = () => {
     find(createNamePred(name), pills) 
   )
 
+  const checkIfCanSubmit = useCallback(() => (
+    any(isActiveState, pills)
+  ), [ pills ])
+
   const handleSubmit = () => {
+    if(!checkIfCanSubmit()) return
+
     forEach(
       (pillState) => {
-        if(isActiveState(pillState)) return
+        if(!isActiveState(pillState)) return
 
         const record: TakenPill = {
           name: pillState.name,
@@ -53,13 +63,13 @@ export const PillsPicker = () => {
           amountOfPills: clamp(1, Infinity, pillState.amount || 1),
         }
 
-        takenPills.recordPill(record)
+        takenPillsStore.recordPill(record)
       },
       pills,
     )
-  }
 
-  const canSubmit = useMemo(() => any(isActiveState, pills), [ pills ])
+    setPills([])
+  }
 
   return (
     <AlignmentView
@@ -72,12 +82,13 @@ export const PillsPicker = () => {
       <h2>Record a pill 🕰</h2>
       <div className={ styles.pillsGrid }>
         {
-          map(
-            ({ iconURL, name, maxAmountPerDay }) => {
+          addIndex<typeof Pills[number]>(map)(
+            ({ iconURL, name }, index) => {
               const state = getPillState(name)
 
               return (
                 <Pill
+                  key={ index }
                   iconURL={ iconURL }
                   name={ name }
                   onChange={ (amount) => setPillState(
@@ -85,8 +96,6 @@ export const PillsPicker = () => {
                     { amount },
                   ) }
                   selectedAmount={ state?.amount }
-                  amountLeft={  maxAmountPerDay - 0  }
-                  totalAmount={ maxAmountPerDay }
                 />
               )
             },
@@ -95,7 +104,7 @@ export const PillsPicker = () => {
         }
       </div>
       {
-        canSubmit && (
+        checkIfCanSubmit() && (
           <button
             type="button"
             className={ styles.submitButton }
