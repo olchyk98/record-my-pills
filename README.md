@@ -2,7 +2,7 @@
 
 An application I wrote while being sick.
 It's a simple logging app created with combination of React and Zustand.
-
+The purpose is to record how many pills I take and when.
 
 ## Features
 
@@ -23,9 +23,11 @@ A Front-End Application.
 - State Manager: `Zustand`
 - Framework: `React`
 - Styling Solution: `Material-UI Styles` (`@material-ui/styles`)
-- Library for common logic: `Ramda`
+- Library for generic logic: `Ramda`
 
 ## Credits
 Oles Odynets
+
 December 2021 (9 December - 12 December)
+
 4 hours of Coding.
