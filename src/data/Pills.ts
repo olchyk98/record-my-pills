@@ -1,3 +1,7 @@
+import alvedonImageURL from './images/pills/alvedon.png'
+import fenoximetylpenicillinImageURL from './images/pills/fenoximetylpenicillin.png'
+import ibuprofenImageURL from './images/pills/ibuprofen.png'
+
 export type PillName =
   'Alvedon'
   | 'Fenoximetylpenicillin Orifarm'
@@ -11,14 +15,14 @@ export interface PillSpecification {
 export const Pills = [
   {
     name: 'Alvedon',
-    iconURL: 'https://www.drugsand.me/_next/image?url=https%3A%2F%2Fdnm-storage.s3.amazonaws.com%2Flsd_b573d2ae3d.png&w=3840&q=75',
+    iconURL: alvedonImageURL,
   },
   {
     name: 'Fenoximetylpenicillin Orifarm',
-    iconURL: 'https://www.drugsand.me/_next/image?url=https%3A%2F%2Fdnm-storage.s3.amazonaws.com%2Falcohol_23b0427d0a.png&w=3840&q=75',
+    iconURL: fenoximetylpenicillinImageURL,
   },
   {
     name: 'Ibuprofen',
-    iconURL: 'https://www.drugsand.me/_next/image?url=https%3A%2F%2Fdnm-storage.s3.amazonaws.com%2Fmdma_3f5e5015d1.png&w=3840&q=75',
+    iconURL: ibuprofenImageURL,
   },
 ] as const
