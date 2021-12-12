@@ -27,6 +27,7 @@ export const useStyles = makeStyles<Dictionary<unknown>, AlignmentViewProps>({
     alignItems: ({ y }) => getAlignmentName(y),
     justifyContent: ({ x }) => getAlignmentName(x),
     flexDirection: ({ type }) => type || 'row',
+    position: 'relative',
   },
 })
 

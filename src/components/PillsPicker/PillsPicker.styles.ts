@@ -20,5 +20,10 @@ export const useStyles = makeStyles({
     cursor: 'pointer',
     fontFamily: 'Gotham',
     marginTop: '40px',
+
+    '&:disabled': {
+      background: 'gray',
+      cursor: 'not-allowed',
+    },
   },
 })

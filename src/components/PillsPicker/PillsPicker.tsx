@@ -103,17 +103,14 @@ export const PillsPicker = () => {
           )
         }
       </div>
-      {
-        checkIfCanSubmit() && (
-          <button
-            type="button"
-            className={ styles.submitButton }
-            onClick={ handleSubmit }
-          >
-            Record
-          </button>
-        )
-      }
+      <button
+        type="button"
+        disabled={ !checkIfCanSubmit() }
+        className={ styles.submitButton }
+        onClick={ handleSubmit }
+      >
+        Record
+      </button>
     </AlignmentView>
   )
 }
